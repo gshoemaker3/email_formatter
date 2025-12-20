@@ -1,0 +1,39 @@
+subject: "End of Day Report"
+
+sections:
+  - type: email_title
+    title: <INSERT BIG EMAIL TITLE NAME>
+
+  - type: subheading
+    subheadings:
+      - title: "Lab:"
+        yaml_name: "lab"
+
+      - title: "Slot:"
+        yaml_name: "slot"
+
+      - title: "MC Build:"
+        yaml_name: "mc_build"
+
+      - title: "GS Build:"
+        yaml_name: "gs_build"
+
+  - type: heading
+    yaml_name: "todays_objectives"
+    title: "Today's Objectives:"
+
+  - type: heading
+    yaml_name: "tl_dr"
+    title: "TL;DR:"
+  
+  - type: heading
+    yaml_name: "detailed_summary"
+    title: "Detailed Summary:"
+
+  - type: heading
+    yaml_name: "tomorrows_objectives"
+    title: "Tomorrow's Objectives:"
+
+  - type: heading
+    yaml_name: "drs_generated"
+    title: "DRs Generated:"
