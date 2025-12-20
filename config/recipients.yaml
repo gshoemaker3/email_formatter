@@ -1,0 +1,9 @@
+to:
+  - jane.doe@gmail.com
+  - john.smith@gmail.com
+
+cc:
+  - manager@gmail.com
+
+bcc:
+  - some.guy@gmail.com
