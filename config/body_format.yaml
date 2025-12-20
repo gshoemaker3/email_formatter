@@ -21,6 +21,12 @@ section_type:
     font_size: 14
     bold: true
     underline: false
+
+  - type: side_by_side_headings
+    level: 3
+    font_size: 14
+    bold: true
+    underline: false
   
   - type: paragraph
     level: 4

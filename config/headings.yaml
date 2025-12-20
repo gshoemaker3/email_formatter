@@ -4,8 +4,8 @@ sections:
   - type: email_title
     title: <INSERT BIG EMAIL TITLE NAME>
 
-  - type: subheading
-    subheadings:
+  - type: side_by_side_headings
+    headings:
       - title: "Lab:"
         yaml_name: "lab"
 
