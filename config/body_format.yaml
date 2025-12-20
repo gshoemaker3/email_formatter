@@ -1,0 +1,25 @@
+
+font:
+  family: "Segoe UI, Arial"
+  size: 14
+
+section_type:
+  - type: email_title
+    level: 1
+    bold: true
+    underline: true
+  
+  - type: heading
+    level: 2
+    bold: true
+    underline: false
+  
+  - type: subheading
+    level: 3
+    bold: true
+    underline: false
+  
+  - type: paragraph
+    level: 4
+    bold: false
+    underline: false
