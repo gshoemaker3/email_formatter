@@ -1,39 +1,56 @@
-subject: "End of Day Report"
+subject: 
+  title: "End of Day Report"
 
 sections:
-  - type: email_title
-    title: <INSERT BIG EMAIL TITLE NAME>
+  email_title:
+    type: email_title
+    title: KF MAINENTANCE NOMINAL OPS DDT
+    sub_bullets: false
+    section_break: false
 
-  - type: side_by_side_headings
+  env_info:
+    type: side_by_side_headings
+    title: "Environment Info:"
+    sub_bullets: false
+    section_break: true
     headings:
-      - title: "Lab:"
-        yaml_name: "lab"
+      lab:
+        title: "Lab:"
+      slot:
+        title: "Slot:"
+      mc_build:
+        title: "MC Build:"
+      gs_build:
+        title: "GS Build:"
+      staff:
+        title: "Staff in Attendance:"
 
-      - title: "Slot:"
-        yaml_name: "slot"
-
-      - title: "MC Build:"
-        yaml_name: "mc_build"
-
-      - title: "GS Build:"
-        yaml_name: "gs_build"
-
-  - type: heading
-    yaml_name: "todays_objectives"
+  todays_objectives:
+    type: heading
     title: "Today's Objectives:"
+    sub_bullets: false
+    section_break: false
 
-  - type: heading
-    yaml_name: "tl_dr"
+  tl_dr:
+    type: heading
     title: "TL;DR:"
+    sub_bullets: false
+    section_break: false
   
-  - type: heading
-    yaml_name: "detailed_summary"
+  detailed_summary:
+    type: heading
     title: "Detailed Summary:"
+    sub_bullets: true
+    section_break: false
 
-  - type: heading
-    yaml_name: "tomorrows_objectives"
+  tomorrows_objectives:
+    type: heading
     title: "Tomorrow's Objectives:"
+    sub_bullets: false
+    section_break: true
 
-  - type: heading
-    yaml_name: "drs_generated"
+  drs_generated:
+    type: heading
     title: "DRs Generated:"
+    sub_bullets: false
+    section_break: false
