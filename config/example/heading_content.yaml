@@ -1,0 +1,59 @@
+type:
+  - paragraph
+
+lab:
+  - txt: Cool Lab
+
+slot:
+  - txt: Slot111
+
+mc_build:
+  - txt: BLD1.1.2
+
+gs_build:
+  - txt: BLD1.1.3
+
+staff:
+  - txt: Alice
+  - txt: Bob
+  - txt: Charlie
+
+email_title:
+  - txt: A small note that goes under the email title
+
+todays_objectives:
+  - li: This is where objective 1 will be.
+  - li: This is where objective 2 will live. 
+  - li: And just because I am feeling froggy, this is where objective 3 will live.
+
+tl_dr:
+  - li: Things were blowing up. 
+  - li: I wrote a bunch of DRs and I am depressed about it.
+  - li: I haven't had enough sleep and I won't get enough tonight.
+
+# The detailed_summary section supports bullets within text blocks
+# Because of this, each text block is an object with a "text" field
+detailed_summary:
+  - li: VERY detailed.
+    bullets:
+      - li: SUB BULLETS LETS GO. I hope this works.
+      - li: bullet two
+      - li: bullet three
+  - li: WOW this is SO detailed.
+    bullets:
+      - li: Sub bullet 1
+      - li: sub bullet 2
+        bullets:
+          - li: hello one
+          - li: hello two
+  - li: Like fr give me a metal or something.
+
+tomorrows_objectives:
+  - li: obj 1
+  - li: obj 2
+  - li: obj3
+
+drs_generated:
+ - li: dr 1
+ - li: dr 2
+ - li: dr 3
