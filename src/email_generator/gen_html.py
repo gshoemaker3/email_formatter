@@ -1,7 +1,7 @@
 from typing import List
 import logging
 
-from config_parser.yaml_parser import YamlParser
+from src.email_generator.template_parser import YamlParser
 from html_utils import Html
 
 

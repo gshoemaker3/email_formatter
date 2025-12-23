@@ -4,7 +4,7 @@ from typing import Dict
 
 import yaml
 
-from config_parser import utils
+from src.email_generator import utils
 
 
 class YamlParser:
