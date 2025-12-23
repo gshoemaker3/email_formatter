@@ -103,7 +103,6 @@ class YamlGen:
         ret_val = self.generator.html_open_tag("table", tbl_opts)
         ret_val += self.generator.html_open_tag("row")
 
-        sect_break = self.data.headings[s_key]
         for key, value in self.data.headings[s_key]['headings'].items():
             ret_val += self.generator.html_open_tag("ri", ri_opts)
             ret_val += self._gen_section(value, s_type, key)
@@ -112,12 +111,9 @@ class YamlGen:
         ret_val += self.generator.html_close_tag("row")
         ret_val += self.generator.html_close_tag("table")
 
-        #if sect_break:
-        #    ret_val = self.generator.html_hr(ret_val)
-
         return ret_val
 
-    def proc_section(self, data, headings):
+    def proc_section(self, data, headings: dict):
         """ This processes the section that is being converted to html.
 
             Args:
