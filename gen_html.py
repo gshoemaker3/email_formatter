@@ -2,13 +2,15 @@ from typing import List
 import logging
 
 from config_parser.yaml_parser import YamlParser
-import html_utils as utils
+from html_utils import Html
 
 
 class YamlGen:
     def __init__(self, data: YamlParser):
         self.data = data
         self.logger = logging.getLogger(__name__)
+        self.generator = Html()
+
     def check_data(self):
         self._check_headings()
 
@@ -51,15 +53,15 @@ class YamlGen:
             Return:
                 - The body of the email in html.
         """
-        indent = utils.html_indent()
+        indent = self.generator.html_indent()
         ret_val = (f"""{indent}<div style="font-family: 'Aptos', Aptos_EmbeddedFont, """
                   """Aptos_MSFontService, Calibri, Helvetica, sans-serif;">\n""")
-        utils.tab_size += 4
+        self.generator.html_incr_indent()
 
         ret_val += self._gen_sections()
 
-        utils.tab_size -= 4
-        indent = utils.html_indent()
+        self.generator.html_decr_indent()
+        indent = self.generator.html_indent()
         ret_val += f"{indent}</div>\n"
         return ret_val
 
@@ -95,8 +97,8 @@ class YamlGen:
         """
         lvl = self.data.type_format[s_type]['level']
         title = value['title']
-        ret_val = utils.html_heading(lvl, title)
-        ret_val += self.proc_section(self.data.heading_content[key])
+        ret_val = self.generator.html_heading(lvl, title)
+        ret_val += self.proc_section(self.data.heading_content[key], key)
         return ret_val
 
     def _gen_sub_sections(self,s_type: str, s_key: str) -> str:
@@ -113,18 +115,26 @@ class YamlGen:
                 - The html that was generated from section. Sections of sub
                   sections/headings are currently in the form of tables.
         """
-        tbl_data = ""
+        tbl_opts = ['width="100%"', 'cellpadding="5"', 'cellspacing="0"', 'border="0"']
+        ri_opts = ['valign="top"']
+        ret_val = self.generator.html_open_tag("table", tbl_opts)
+        ret_val += self.generator.html_open_tag("row")
+
         sect_break = self.data.headings[s_key]
         for key, value in self.data.headings[s_key]['headings'].items():
-            data = self._gen_section(value, s_type, key)
-            tbl_data += utils.html_tbl_data(data)
-        tbl_row = utils.html_tbl_row(tbl_data)
-        tbl = utils.html_tbl(tbl_row)
-        if sect_break:
-            tbl = utils.html_hr(tbl)
-        return tbl
+            ret_val += self.generator.html_open_tag("ri", ri_opts)
+            ret_val += self._gen_section(value, s_type, key)
+            ret_val += self.generator.html_close_tag("ri")
 
-    def proc_section(self, data):
+        ret_val += self.generator.html_close_tag("row")
+        ret_val += self.generator.html_close_tag("table")
+
+        if sect_break:
+            ret_val = self.generator.html_hr(ret_val)
+
+        return ret_val
+
+    def proc_section(self, data, sect_name):
         """ This processes the section that is being converted to html.
 
             Args:
@@ -132,14 +142,14 @@ class YamlGen:
         """
         ret_val = ""
         if isinstance(data, list):
-            ret_val += self.proc_list(data)
+            ret_val += self.proc_list(data, sect_name)
         elif isinstance(data, dict):
-            ret_val += self.proc_dict(data)
+            ret_val += self.proc_dict(data, sect_name)
         else:
             raise TypeError(f"Unknown data type provided: {type(data)}")
         return ret_val
 
-    def proc_list(self, data: list) -> str:
+    def proc_list(self, data: list, sect_key: str) -> str:
         """ This processes lists found while processing a section
             to be converted to html. This method utilizes recursion 
             to process the data found in the data member variable.
@@ -151,22 +161,26 @@ class YamlGen:
             Return:
                 - a group of items in the section that has been processed into html.
         """
-        indent = utils.html_indent()
-        ret_val = f"{indent}<ul>\n"
-        utils.tab_size += 4
+        # indent = self.generator.html_indent()
+        sect_type = self.data.headings[sect_key]["content_structure"]
+        ret_val = self.generator.html_open_tag(sect_type)
+        # ret_val = f"{indent}<ul>\n"
+        # self.generator.html_incr_indent()
         for val in data:
             if isinstance(val, str):
-                ret_val += utils.html_list_item(val)
+                ret_val += self.generator.html_list_item(val)
             elif isinstance(val, dict):
-                ret_val += self.proc_dict(val)
+                ret_val += self.proc_dict(val, sect_key)
             elif isinstance(val, list):
-                ret_val += self.proc_list(val)
-    
-        utils.tab_size -= 4
-        indent = utils.html_indent()
-        return ret_val + f"{indent}</ul>\n"
+                ret_val += self.proc_list(val, sect_key)
 
-    def proc_dict(self, data: dict):
+        ret_val += self.generator.html_close_tag(sect_type)
+        return ret_val
+        # self.generator.html_decr_indent()
+        # indent = self.generator.html_indent()
+        # return ret_val + f"{indent}</ul>\n"
+
+    def proc_dict(self, data: dict, sect_key: str):
         """ This processes dictionaries found while processing a section
             to be converted to html. This method utilizes recursion 
             to process the data found in the data member variable.
@@ -181,11 +195,12 @@ class YamlGen:
         ret_val = ""
         for key, value in data.items():
             if isinstance(value, str):
-                ret_val += utils.html_list_item(value)
+                ret_val += self.generator.html_get_item(key, value)
+                # ret_val += self.generator.html_list_item(value)
             elif isinstance(value, list):
-                ret_val += self.proc_list(value)
+                ret_val += self.proc_list(value, sect_key)
             elif isinstance(value, dict):
-                ret_val += self.proc_dict(value)
+                ret_val += self.proc_dict(value, sect_key)
         return ret_val
 
     def print_dict(self, data):
