@@ -51,7 +51,6 @@ class Html:
         return tabs
 
     def html_heading(self, formatting: dict, data):
-        indent = self.html_indent()
         settings = ['bold', 'underline']
         lvl = formatting['level']
         ret_val = self.html_open_tag("heading", False).replace('<h',f'<h{lvl}')
