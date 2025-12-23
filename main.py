@@ -13,7 +13,7 @@ def test(html: str):
 
 def main():
     try:
-        config_dir = os.path.join(os.getcwd(), "config")
+        config_dir = os.path.join(os.getcwd(), "config", "example")
         config_data = YamlParser(config_dir)
         config_data.load_files()
         generator = YamlGen(config_data)

@@ -11,26 +11,6 @@ class YamlGen:
         self.logger = logging.getLogger(__name__)
         self.generator = Html()
 
-    def check_data(self):
-        self._check_headings()
-
-    def _check_keys(self, data: dict, required_keys: List[str]):
-        for key in required_keys:
-            if key not in data:
-                raise AttributeError(f"This following required key is missing: {key}")
-
-    def _check_headings(self):
-
-        # Check for required headings
-        try:
-            for key, value in self.data.headings.items():
-                self._check_keys(value, ["title", "type", "sub_bullets"])
-        except AttributeError as e:
-            raise AttributeError(f"The {key} heading in the headings.yaml is "
-                                "missing a required field %s", e)
-        except Exception as e:
-            self.logger.exception(e)
-
     def test(self):
         """ This method will validate yaml files before 
             performing operations on them.
@@ -76,12 +56,13 @@ class YamlGen:
         for key, value in self.data.headings.items():
             h_type = value['type']
             sect_break = value['section_break']
-            # generate sub sections
+
             if h_type == "side_by_side_headings":
                 ret_val += self._gen_sub_sections(h_type, key)
-                continue
-            ret_val += self._gen_section(value, h_type, key)
-            ret_val += "<hr>" if sect_break else ""
+            else:
+                ret_val += self._gen_section(value, h_type, key)
+
+            ret_val += self.generator.html_hr() if sect_break else ""
         return ret_val
 
     def _gen_section(self, value: dict, s_type: str, key: str) -> str:
@@ -95,10 +76,12 @@ class YamlGen:
             Return:
                 - The html generated from a single section listed in headings.yaml
         """
-        lvl = self.data.type_format[s_type]['level']
+        formating = self.data.type_format[s_type]
         title = value['title']
-        ret_val = self.generator.html_heading(lvl, title)
-        ret_val += self.proc_section(self.data.heading_content[key], key)
+        ret_val = self.generator.html_heading(formating, title)
+        #ret_val += self.proc_section(self.data.heading_content[key], key)
+        ret_val += self.proc_section(self.data.heading_content[key], value)
+
         return ret_val
 
     def _gen_sub_sections(self,s_type: str, s_key: str) -> str:
@@ -129,12 +112,12 @@ class YamlGen:
         ret_val += self.generator.html_close_tag("row")
         ret_val += self.generator.html_close_tag("table")
 
-        if sect_break:
-            ret_val = self.generator.html_hr(ret_val)
+        #if sect_break:
+        #    ret_val = self.generator.html_hr(ret_val)
 
         return ret_val
 
-    def proc_section(self, data, sect_name):
+    def proc_section(self, data, headings):
         """ This processes the section that is being converted to html.
 
             Args:
@@ -142,14 +125,14 @@ class YamlGen:
         """
         ret_val = ""
         if isinstance(data, list):
-            ret_val += self.proc_list(data, sect_name)
+            ret_val += self.proc_list(data, headings)
         elif isinstance(data, dict):
-            ret_val += self.proc_dict(data, sect_name)
+            ret_val += self.proc_dict(data, headings)
         else:
             raise TypeError(f"Unknown data type provided: {type(data)}")
         return ret_val
 
-    def proc_list(self, data: list, sect_key: str) -> str:
+    def proc_list(self, data: list, headings: dict) -> str:
         """ This processes lists found while processing a section
             to be converted to html. This method utilizes recursion 
             to process the data found in the data member variable.
@@ -161,26 +144,20 @@ class YamlGen:
             Return:
                 - a group of items in the section that has been processed into html.
         """
-        # indent = self.generator.html_indent()
-        sect_type = self.data.headings[sect_key]["content_structure"]
+        sect_type = headings["content_structure"]
         ret_val = self.generator.html_open_tag(sect_type)
-        # ret_val = f"{indent}<ul>\n"
-        # self.generator.html_incr_indent()
         for val in data:
             if isinstance(val, str):
                 ret_val += self.generator.html_list_item(val)
             elif isinstance(val, dict):
-                ret_val += self.proc_dict(val, sect_key)
+                ret_val += self.proc_dict(val, headings)
             elif isinstance(val, list):
-                ret_val += self.proc_list(val, sect_key)
+                ret_val += self.proc_list(val, headings)
 
         ret_val += self.generator.html_close_tag(sect_type)
         return ret_val
-        # self.generator.html_decr_indent()
-        # indent = self.generator.html_indent()
-        # return ret_val + f"{indent}</ul>\n"
 
-    def proc_dict(self, data: dict, sect_key: str):
+    def proc_dict(self, data: dict, headings: dict):
         """ This processes dictionaries found while processing a section
             to be converted to html. This method utilizes recursion 
             to process the data found in the data member variable.
@@ -196,11 +173,10 @@ class YamlGen:
         for key, value in data.items():
             if isinstance(value, str):
                 ret_val += self.generator.html_get_item(key, value)
-                # ret_val += self.generator.html_list_item(value)
             elif isinstance(value, list):
-                ret_val += self.proc_list(value, sect_key)
+                ret_val += self.proc_list(value, headings)
             elif isinstance(value, dict):
-                ret_val += self.proc_dict(value, sect_key)
+                ret_val += self.proc_dict(value, headings)
         return ret_val
 
     def print_dict(self, data):

@@ -1,113 +1,105 @@
-open_para = '<p>'
-close_para = '</p>'
-line_break = '<br>'
-open_heading = '<h{}>'
-close_heading = '</h{}>'
-horz_rule = '<hr>'
-pre_open = '<pre>'
-pre_close = '</pre>'
-bold_o = '<b>'
-bold_c = '</b>'
-hl_open = '<mark>'
-hl_close = '</mark>'
-strk_open = '<del>'
-strk_close = '</del>'
-ss_open = '<sub>'
-subs_close = '</sub>'
-sups_open = '<sup>'
-sups_close = '</sup>'
-
-# description list tags
-dsc_lst_o = '<dl>'
-dsc_lst_c = '</dl>'
-# description term tags
-def_trm_o = '<dt>'
-def_trm_c = '</dt>'
-# describe term tags
-des_trm_o = '<dd>'
-des_trm_c = '</dd>'
-# unordered list tags
-ul_o = '<ul>'
-ul_c = '</ul>'
-# order list tags
-ol_o = '<ol>'
-ol_c = '</ol>'
-# list items tags
-li_o = '<li>'
-li_c = '</li>'
-
-tab_size = 0
-
-def html_indent():
-    tabs = " " * tab_size
-    return tabs
-
-def html_heading(lvl, data):
-    indent = html_indent()
-    snippet = f"""{indent}<h{lvl}>{bold_o}{data}{bold_c}</h{lvl}>\n"""
-    return snippet
-
-def html_hr(data):
-    indent = html_indent()
-    return f"{data}{indent}<hr>\n"
-
-def html_paragraph(section):
-    indent = html_indent()
-    return f"{indent}<p>{section}</p>\n"
+from typing import List
 
 
-def html_list(section, list_type="ul"):
-    h_list = None
-    indent = html_indent()
-    if list_type == "ul":  
-        h_list = f"<ul>\n{section}</ul>\n"
-    elif list_type == "ol":
-        h_list = f"<ol>\n{section}</ol>\n"
-    elif list_type == "dl":
-        h_list = f"<dl>\n{section}<dl>\n"
-    else:
-        raise AttributeError("The list_type provided is invalid")
-    return h_list
+class Html:
+    def __init__(self):
+        self.tab_size = 0
+        self.h_opts = 'style="margin-bottom: 2px;"'
+        self.open_tags = {"unordered list": "<ul {}>\n",
+                          "ordered list": "<ol {}>\n",
+                          "li": "<li {}>",
+                          "table": "<table {}>\n",
+                          "txt": "<p {}>",
+                          "heading": "<h {}>",
+                          "bold": "<b>",
+                          "row": "<tr {}>\n",
+                          "ri": "<td {}>\n",
+                          "underline": "<u>"
+                          }
+        self.close_tags = {"unordered list": "</ul>\n",
+                          "ordered list": "</ol>\n",
+                          "li": "</li>\n",
+                          "table": "</table>\n",
+                          "txt": "</p>\n",
+                          "heading": "</h>\n",
+                          "bold": "</b>",
+                          "row": "</tr>\n",
+                          "ri": "</td>\n",
+                          "underline": "</u>"
+                          }
+        self.default_opts = {"unordered list": 'style="margin: 4px 0;"',
+                             "ordered list": 'style="margin: 4px 0;"',
+                             "li": 'style="margin: 0;"',
+                             "table": 'width="100%" cellpadding="5" cellspacing="0" border="0"',
+                             "txt": 'style="margin: 4px 0;"',
+                             "heading": 'style="margin-bottom: 2px;"',
+                             "bold": "",
+                             "row": "",
+                             "ri": 'valign="top"',
+                             "underline": ""
+                            }
 
+    def html_get_item(self, item_type, data, options: list = None):
+        indent = self.html_indent()
+        opts = " ".join(options) if options else self.default_opts[item_type]
+        o_tag = self.open_tags[item_type].format(opts)
+        c_tag = self.close_tags[item_type]
+        return indent + o_tag + data + c_tag
 
-def html_list_item(data: str):
-    indent = html_indent()
-    li = f"{indent}<li>{data}</li>\n"
-    return li
+    def html_indent(self):
+        tabs = " " * self.tab_size
+        return tabs
 
+    def html_heading(self, formatting: dict, data):
+        indent = self.html_indent()
+        settings = ['bold', 'underline']
+        lvl = formatting['level']
+        ret_val = self.html_open_tag("heading", False).replace('<h',f'<h{lvl}')
 
-def html_tbl(data: str):
-    indent = html_indent()
-    settings = 'width="100%" border="0" cellpadding="10" cellspacing="0"'
-    tbl= f"{indent}<table {settings}>\n{data}{indent}</table>\n"
-    return tbl
+        for option in settings:
+            ret_val += self.open_tags[option] if formatting[option] else ""
 
+        ret_val += data
 
-def html_tbl_row(data: str):
-    indent = html_indent()
-    tr = f"{indent}<tr>\n{data}{indent}</tr>\n"
-    return tr
+        for option in reversed(settings):
+            ret_val += self.close_tags[option] if formatting[option] else ""
+        ret_val += self.close_tags["heading"].replace('</h',f'</h{lvl}')
+        return ret_val
 
+    def html_hr(self):
+        indent = self.html_indent()
+        return f"{indent}<hr>\n"
 
-def html_tbl_data(data: str):
-    indent = html_indent()
-    td = f'{indent}<td valign="top">\n{data}{indent}</td>\n'
-    return td
+    def html_list_item(self, data: str):
+        indent = self.html_indent()
+        li = f"{indent}<li>{data}</li>\n"
+        return li
 
-def html_open_tag(tag_type: str):
-    # get tag
-    # add it to return value
-    # increment tab size
-    # return return value
-    pass
+    def html_open_tag(self, tag_key: str, indent: bool = True, options: List[str] = None):
+        ind = self.html_indent()
 
-def html_close_tag(tag_type: str):
-    # get tag
-    # decrement tab size
-    # return close tag
-    pass
-def html_incr_indent():
-    tab_size += 4
+        if tag_key.upper() == "NONE":
+            return ""
 
-def html_decr_indent():
-    tab_size -= 4
+        opts = " ".join(options) if options else self.default_opts[tag_key]
+        tag = self.open_tags[tag_key].format(opts)
+        ret_val = ind + tag
+        if indent:
+            self.html_incr_indent()
+        return ret_val
+
+    def html_close_tag(self, tag_type: str):
+        if tag_type.upper() == "NONE":
+            return ""
+
+        self.html_decr_indent()
+        ind = self.html_indent()
+        tag = self.close_tags[tag_type]
+
+        return ind + tag
+
+    def html_incr_indent(self):
+        self.tab_size += 4
+
+    def html_decr_indent(self):
+        self.tab_size -= 4
