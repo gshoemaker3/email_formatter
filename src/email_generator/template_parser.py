@@ -4,7 +4,7 @@ from typing import Dict
 
 import yaml
 
-from src.email_generator import utils
+import utils
 
 
 class YamlParser:
@@ -14,9 +14,9 @@ class YamlParser:
         self.font = None
         self.type_format = None
         self.recipients = None
-        self.headings = None
+        self.section_defs = None
         self.subject = None
-        self.heading_content = None
+        self.content = None
         self.logger = logging.getLogger("YamlParser")
 
     def _load_file(self, filepath: str) -> Dict:
@@ -43,13 +43,13 @@ class YamlParser:
         for file in yaml_files:
             content = self._load_file(file)
 
-            if file.name == "body_format.yaml":
+            if file.name == "section_format.yaml":
                 self.type_format = content["type"]
                 self.font = content["font"]
-            elif file.name == "heading_content.yaml":
-                self.heading_content = content
-            elif file.name == "headings.yaml":
-                self.headings = content["sections"]
+            elif file.name == "content.yaml":
+                self.content = content
+            elif file.name == "section_defs.yaml":
+                self.section_defs = content["sections"]
                 self.subject = content["subject"]
             elif file.name == "recipients.yaml":
                 self.recipients = content

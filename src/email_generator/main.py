@@ -17,8 +17,8 @@ def main():
         config_data = YamlParser(config_dir)
         config_data.load_files()
         generator = YamlGen(config_data)
-        html = generator.gen_email()
-        test(html)
+        msg = generator.gen_email()
+        test(msg.get_content())
     except Exception as e:
         logger.exception("The following exception was caught: %s", e)
         input("Please press any button to exit tool...")
