@@ -14,7 +14,8 @@ class Html:
                           "bold": "<b>",
                           "row": "<tr {}>\n",
                           "ri": "<td {}>\n",
-                          "underline": "<u>"
+                          "underline": "<u>",
+                          "th": "<th {}>"
                           }
         self.close_tags = {"unordered list": "</ul>\n",
                           "ordered list": "</ol>\n",
@@ -25,7 +26,8 @@ class Html:
                           "bold": "</b>",
                           "row": "</tr>\n",
                           "ri": "</td>\n",
-                          "underline": "</u>"
+                          "underline": "</u>",
+                          "th": "</th>"
                           }
         self.default_opts = {"unordered list": 'style="margin: 4px 0;"',
                              "ordered list": 'style="margin: 4px 0;"',
@@ -36,7 +38,8 @@ class Html:
                              "bold": "",
                              "row": "",
                              "ri": 'valign="top"',
-                             "underline": ""
+                             "underline": "",
+                             "th":""
                             }
 
     def html_get_item(self, item_type, data, options: list = None):
