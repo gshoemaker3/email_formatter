@@ -1,7 +1,8 @@
 from typing import List
 import logging
+from email.message import EmailMessage
 
-from src.email_generator.template_parser import YamlParser
+from template_parser import YamlParser
 from html_utils import Html
 
 
@@ -18,15 +19,20 @@ class YamlGen:
         print("----------Types-----------")
         self.print_dict(self.data.type_format)
         print("----------HEADINGS-----------")
-        self.print_dict(self.data.headings)
+        self.print_dict(self.data.section_defs)
         print("----------HEADING CONTENT-----------")
-        self.print_dict(self.data.heading_content)
+        self.print_dict(self.data.content)
 
-    def gen_email(self):
+    def gen_email(self) -> EmailMessage:
         """ This method generates an email"""
         email_body = self._gen_body()
-        return email_body
-        # print(email_body)
+
+        msg = EmailMessage()
+        msg['Subject'] = self.data.subject['title']
+        msg['To'] = ", ".join(self.data.recipients)
+        msg.set_content(email_body, subtype="html")
+
+        return msg
 
     def _gen_body(self) -> str:
         """ This generates the body of an email in html.
@@ -53,7 +59,7 @@ class YamlGen:
                   to html.
         """
         ret_val = ""
-        for key, value in self.data.headings.items():
+        for key, value in self.data.section_defs.items():
             h_type = value['type']
             sect_break = value['section_break']
 
@@ -69,20 +75,50 @@ class YamlGen:
         """ This generates html based on a section in the headings.yaml
         
             Args:
-                - value: The section that will be converted html
+                - value: The section of section_defs.yaml that will be converted html
                 - s_type: The section type that is defined in body_format.yaml
                 - key: The key to the section being converted to html
 
             Return:
                 - The html generated from a single section listed in headings.yaml
         """
-        formating = self.data.type_format[s_type]
+        formatting = self.data.type_format[s_type]
+        options = formatting['options']
         title = value['title']
-        ret_val = self.generator.html_heading(formating, title)
-        #ret_val += self.proc_section(self.data.heading_content[key], key)
-        ret_val += self.proc_section(self.data.heading_content[key], value)
+        ret_val = self.generator.html_heading(formatting, title)
+        ret_val += self.proc_section(self.data.content[key], value, options)
 
         return ret_val
+    
+    def _gen_table(self, s_type: str, s_key: str) -> str:
+        tbl_options = self.data.type_format[s_type]["options"]
+        row_num = self.data.section_defs[s_key]['num_rows']
+        ret_val = self.generator.html_open_tag("table", tbl_options)
+        ret_val += self._gen_table_headings(self.data.section_defs[s_key], self.data.type_format[s_type])
+
+        # generate rows.
+        content_tag = self.data.type_format[s_type]['content_format']['tag']
+        content_options = self.data.type_format[s_type]['content_format']['options']
+        headings = self.data.section_defs[s_key]['headings']
+        for idx in range(row_num):
+            ret_val += self.generator.html_open_tag("row")
+            for key, val in headings.items():
+                ret_val += self.proc_section(self.data.content[key][f'row_{idx+1}'], headings, content_options)
+            ret_val += self.generator.html_close_tag("row")
+
+
+    def _gen_table_headings(self, sub_section: dict, type_format: dict):
+        ret_val = self.generator.html_open_tag("row")
+        headings = sub_section['headings']
+        tag = type_format["heading_format"]["tag"]
+        options = type_format["heading_format"]["options"]
+        for key, val in headings.items():
+            ret_val += self.generator.html_get_item(tag, key, options)
+        
+        ret_val += self.generator.html_close_tag("row")
+        return ret_val
+
+
 
     def _gen_sub_sections(self,s_type: str, s_key: str) -> str:
         """ This generates a section of sub sections/headings. These
@@ -103,7 +139,7 @@ class YamlGen:
         ret_val = self.generator.html_open_tag("table", tbl_opts)
         ret_val += self.generator.html_open_tag("row")
 
-        for key, value in self.data.headings[s_key]['headings'].items():
+        for key, value in self.data.section_defs[s_key]['headings'].items():
             ret_val += self.generator.html_open_tag("ri", ri_opts)
             ret_val += self._gen_section(value, s_type, key)
             ret_val += self.generator.html_close_tag("ri")
@@ -113,7 +149,7 @@ class YamlGen:
 
         return ret_val
 
-    def proc_section(self, data, headings: dict):
+    def proc_section(self, data, content: dict, options: List[str]):
         """ This processes the section that is being converted to html.
 
             Args:
@@ -121,14 +157,14 @@ class YamlGen:
         """
         ret_val = ""
         if isinstance(data, list):
-            ret_val += self.proc_list(data, headings)
+            ret_val += self.proc_list(data, content, options)
         elif isinstance(data, dict):
-            ret_val += self.proc_dict(data, headings)
+            ret_val += self.proc_dict(data, content, options)
         else:
             raise TypeError(f"Unknown data type provided: {type(data)}")
         return ret_val
 
-    def proc_list(self, data: list, headings: dict) -> str:
+    def proc_list(self, data: list, headings: dict, options: List[str]) -> str:
         """ This processes lists found while processing a section
             to be converted to html. This method utilizes recursion 
             to process the data found in the data member variable.
@@ -146,14 +182,14 @@ class YamlGen:
             if isinstance(val, str):
                 ret_val += self.generator.html_list_item(val)
             elif isinstance(val, dict):
-                ret_val += self.proc_dict(val, headings)
+                ret_val += self.proc_dict(val, headings, options)
             elif isinstance(val, list):
-                ret_val += self.proc_list(val, headings)
+                ret_val += self.proc_list(val, headings, options)
 
         ret_val += self.generator.html_close_tag(sect_type)
         return ret_val
 
-    def proc_dict(self, data: dict, headings: dict):
+    def proc_dict(self, data: dict, headings: dict, options: List[str]):
         """ This processes dictionaries found while processing a section
             to be converted to html. This method utilizes recursion 
             to process the data found in the data member variable.
@@ -168,11 +204,11 @@ class YamlGen:
         ret_val = ""
         for key, value in data.items():
             if isinstance(value, str):
-                ret_val += self.generator.html_get_item(key, value)
+                ret_val += self.generator.html_get_item(key, value, options)
             elif isinstance(value, list):
-                ret_val += self.proc_list(value, headings)
+                ret_val += self.proc_list(value, headings, options)
             elif isinstance(value, dict):
-                ret_val += self.proc_dict(value, headings)
+                ret_val += self.proc_dict(value, headings, options)
         return ret_val
 
     def print_dict(self, data):
