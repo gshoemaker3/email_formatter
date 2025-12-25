@@ -1,16 +1,93 @@
 import os
 import logging
-from typing import Dict
+from typing import Dict, List
+from pathlib import Path
 
 import yaml
 
 import utils
 
 
-class YamlParser:
+class Parser:
 
-    def __init__(self, config_dir):
-        self.config_dir = config_dir
+    def __init__(self):
+        pass
+
+    def select_template(self):
+        """ This allows the user to select a template stored in the templates
+            directory by displaying all of the templates and capturing the
+            user's input
+        """
+        try:
+            templates = self.get_templates()
+            template = self.select_from_list(templates)
+            return template
+        except Exception as e:
+            print(e)
+
+    def get_templates(self) -> List[str]:
+        """ This gathers all templates in the 'templates' directory 
+            Templates should always be directories since they are a 
+            collection of files. All files are ignored.
+        """
+        template_dir = Path(os.path.join(os.getcwd(), "templates"))
+        templates = template_dir.glob("*")
+        templates = [i for i in templates if not os.path.isfile(i)]
+
+        if len(templates) == 0:
+            raise FileNotFoundError("No templates were found"
+                                    f" in the template directory ({template_dir})")
+        return templates
+
+    def select_from_list(self, options: List[str]) -> str:
+        """ This method is displays the strings stored in 'options'
+            with a corresponding number so a user can select any of the
+            displayed items by inputting a number.
+
+            Args:
+                - options: A list that contains all of the available options that
+                will be displayed to the user.
+            Return:
+                - The string that the user has selected.
+            
+        """
+        while True:
+            print("Please select from the following options:")
+            for idx, item in enumerate(options):
+                print(f"{idx+1}) {item}")
+            selection = input("Enter number here: ")
+            is_valid = self.selection_handler(selection, len(options))
+            if is_valid:
+                return options[int(selection)-1]
+
+
+    def selection_handler(self, selection: str, num_selection: int) -> bool:
+        """ This runs checks on the 'selection' input argument. the 
+            checks are defined by the if statements.
+
+            Args:
+                - selection: This is an input that is provided by the user.
+                It contains the value that needs to be validated.
+                - num_selection: This is the number of selections that were
+                available for the user to choose from.
+            Return:
+                - True if 'selection' is a number and is between 0 and the 
+                int stored in num_selection, otherwise false.
+        """
+        if not selection.isdigit():
+            print(f"The provided response: {selection} is invalid; it isn't a number."
+                " Please try again and input a number.\n")
+            return False
+        if 1 > int(selection) > len(num_selection):
+            print(f"The provided response: {selection} is invalid; number provided is out of range"
+                "Please provide a number that is displayed in the selections above.\n")
+            return False
+        return True
+
+class YamlParser(Parser):
+
+    def __init__(self, config_dir=None):
+        self.config_dir = config_dir if config_dir else self.select_template()
         self.font = None
         self.type_format = None
         self.recipients = None
