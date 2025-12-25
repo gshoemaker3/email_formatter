@@ -1,6 +1,5 @@
 import logging
 import sys
-import os
 
 from template_parser import YamlParser
 from gen_html import YamlGen
@@ -13,8 +12,7 @@ def test(html: str):
 
 def main():
     try:
-        config_dir = os.path.join(os.getcwd(), "templates", "example")
-        config_data = YamlParser(config_dir)
+        config_data = YamlParser()
         config_data.load_files()
         generator = YamlGen(config_data)
         msg = generator.gen_email()
@@ -23,7 +21,6 @@ def main():
         logger.exception("The following exception was caught: %s", e)
         input("Please press any button to exit tool...")
         sys.exit()
-
 
 if __name__ == "__main__":
     main()
