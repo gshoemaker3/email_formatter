@@ -1,11 +1,11 @@
 import os
 import logging
+import yaml
 from typing import Dict, List
 from pathlib import Path
 
-import yaml
+from . import utils
 
-import utils
 
 
 class Parser:
