@@ -6,7 +6,7 @@ def cli_args() -> argparse.Namespace:
 
     parser.add_argument('-t', '--template', type=sanitize_template, help="Template to generate email from")
     parser.add_argument('-c', '--client', default="outlook",
-                        choices=["outlook", "gmail"], type=str, 
+                        choices=["outlook", "gmail"], type=str,
                         help="Email client that will be sendint the email")
     parser.add_argument('-v', '--verbose', action="store_true")
 

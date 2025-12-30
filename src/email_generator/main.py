@@ -1,5 +1,6 @@
 import logging
 import sys
+import os
 from argparse import Namespace
 
 import parsers
@@ -13,9 +14,10 @@ def test(html: str):
 def main():
 
     args: Namespace = parsers.cli_args()
+    template = os.path.join(os.getcwd(),'templates', args.template) if args.template else None
 
     try:
-        config_data = parsers.YamlParser()
+        config_data = parsers.YamlParser(template)
         config_data.load_files()
         generator = YamlGen(config_data)
         msg = generator.gen_email()

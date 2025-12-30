@@ -4,7 +4,7 @@ import yaml
 from typing import Dict, List
 from pathlib import Path
 
-import utils
+from . import utils
 
 
 
