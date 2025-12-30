@@ -2,7 +2,7 @@ from typing import List
 import logging
 from email.message import EmailMessage
 
-from parsers.template_parser import YamlParser
+from parsers import YamlParser
 from html_utils import Html
 
 
