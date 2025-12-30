@@ -13,26 +13,30 @@ class Parser:
     def __init__(self):
         pass
 
-    def select_template(self):
+    def select_template(self) -> Path:
         """ This allows the user to select a template stored in the templates
             directory by displaying all of the templates and capturing the
             user's input
+
+            Return:
+                - The fully qualified path to the select template to generate the email with.
         """
         try:
-            templates = self.get_templates()
-            template = self.select_from_list(templates)
-            return template
+            template_dir = Path(os.path.join(os.getcwd(), 'templates'))
+            templates: List[str] = self.get_templates(template_dir)
+            template: str = self.select_from_list(templates)
+            return template_dir / template
         except Exception as e:
             print(e)
 
-    def get_templates(self) -> List[str]:
+    def get_templates(self, template_dir: Path) -> List[str]:
         """ This gathers all templates in the 'templates' directory 
             Templates should always be directories since they are a 
             collection of files. All files are ignored.
         """
-        template_dir = Path(os.path.join(os.getcwd(), "templates"))
+        #template_dir = Path(os.path.join(os.getcwd(), "templates"))
         templates = template_dir.glob("*")
-        templates = [i for i in templates if not os.path.isfile(i)]
+        templates = [os.path.basename(i) for i in templates if not os.path.isfile(i)]
 
         if len(templates) == 0:
             raise FileNotFoundError("No templates were found"
@@ -51,11 +55,15 @@ class Parser:
                 - The string that the user has selected.
             
         """
+        if not isinstance(options, list):
+            raise TypeError(f"The provided input arguement is type: {type(options)} "
+                             "instead of type List")
         while True:
-            print("Please select from the following options:")
+            print("\nPlease select from the following options:")
+            print("--------------------------------------------")
             for idx, item in enumerate(options):
                 print(f"{idx+1}) {item}")
-            selection = input("Enter number here: ")
+            selection = input("\nEnter number here: ")
             is_valid = self.selection_handler(selection, len(options))
             if is_valid:
                 return options[int(selection)-1]
