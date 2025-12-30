@@ -2,9 +2,8 @@ import logging
 import sys
 from argparse import Namespace
 
-from parsers.template_parser import YamlParser
+import parsers
 from gen_html import YamlGen
-from parsers.cl_parser import cli_args
 logger = logging.getLogger(__name__)
 
 def test(html: str):
@@ -13,10 +12,10 @@ def test(html: str):
 
 def main():
 
-    args: Namespace = cli_args()
+    args: Namespace = parsers.cli_args()
 
     try:
-        config_data = YamlParser()
+        config_data = parsers.YamlParser()
         config_data.load_files()
         generator = YamlGen(config_data)
         msg = generator.gen_email()
