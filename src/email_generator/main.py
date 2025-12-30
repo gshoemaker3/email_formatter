@@ -1,9 +1,10 @@
 import logging
 import sys
+from argparse import Namespace
 
-from template_parser import YamlParser
+from parsers.template_parser import YamlParser
 from gen_html import YamlGen
-
+from parsers.cl_parser import cli_args
 logger = logging.getLogger(__name__)
 
 def test(html: str):
@@ -11,6 +12,9 @@ def test(html: str):
         f.write(html)
 
 def main():
+
+    args: Namespace = cli_args()
+
     try:
         config_data = YamlParser()
         config_data.load_files()
