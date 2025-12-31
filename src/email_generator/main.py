@@ -5,7 +5,6 @@ from argparse import Namespace
 
 import parsers
 from gen_html import YamlGen
-from outlook_email import gen_outlook_email
 logger = logging.getLogger(__name__)
 
 def test(html: str):
@@ -22,8 +21,13 @@ def main():
         config_data.load_files()
         generator = YamlGen(config_data)
         msg = generator.gen_email()
+        print(msg['To'])
         test(msg.get_content())
-        gen_outlook_email(msg)
+
+        if sys.platform == "win32":
+            from outlook_email import gen_outlook_email, gen_outlook_email_2
+            gen_outlook_email(msg)
+            # gen_outlook_email_2(msg)
     except Exception as e:
         logger.exception("The following exception was caught: %s", e)
         input("Please press any button to exit tool...")

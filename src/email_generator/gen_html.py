@@ -29,7 +29,7 @@ class YamlGen:
 
         msg = EmailMessage()
         msg['Subject'] = self.data.subject['title']
-        msg['To'] = ", ".join(self.data.recipients)
+        msg['To'] = ", ".join(self.data.recipients['to'])
         msg.set_content(email_body, subtype="html")
 
         return msg
