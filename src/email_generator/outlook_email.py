@@ -1,11 +1,17 @@
 import os
+import sys
 
-import win32com.client
 from email.message import EmailMessage
+import win32com.client
+from win32com.client import CDispatch
 
 def gen_outlook_email(msg: EmailMessage):
+
+    if not sys.platform == "win32":
+        raise OSError(f"Wrong OS. Needed os is win32, but currently using {sys.platform}")
+
     outlook = win32com.client.Dispatch("Outlook.Application")
-    mail = outlook.CreateItem(0)
+    mail: CDispatch = outlook.CreateItem(0)
     mail.To = msg.get("To", "")
     mail.Subject = msg.get("Subject","")
     mail.HTMLBody = msg.get_content()
