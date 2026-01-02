@@ -5,6 +5,8 @@ from argparse import Namespace
 
 import parsers
 from gen_html import YamlGen
+from email_generator import email_gen
+
 logger = logging.getLogger(__name__)
 
 def test(html: str):
@@ -29,9 +31,7 @@ def main():
             print("\n------------------------------------------------------------")
             print("Please ensure that your Outlook app is open before continuing.")
             input("Once Outlook is open, press any key to continue...")
-            from outlook_email import gen_outlook_email, gen_outlook_email_2
-            # gen_outlook_email(msg)
-            gen_outlook_email_2(msg)
+            email_gen.outlook(msg)
     except Exception as e:
         logger.exception("The following exception was caught: %s", e)
         input("Please press any button to exit tool...")
