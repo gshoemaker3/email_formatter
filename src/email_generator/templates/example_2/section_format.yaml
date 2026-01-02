@@ -4,19 +4,37 @@ font:
   size: 14
 
 type:
-  table:
-    options:
-      - 'width="100%" cellpadding="5" cellspacing="0" border="0"'
-    tag: 'table'
-    heading_format:
-      tag: 'th'
-      options: 
-        - 'style="margin-bottom: 2px;"'
-      bold: true
-      underline: true
-    content_format:
-      tag: 'td'
-      options: 
-        - 'valign="top"'
-      bold: false
-      underline: false
+  email_title:
+    level: 1
+    font_size: 20
+    bold: true
+    underline: true
+    options: None
+
+  heading:
+    level: 2
+    font_size: 16
+    bold: true
+    underline: false
+    options: None
+  
+  subheading:
+    level: 3
+    font_size: 14
+    bold: true
+    underline: false
+    options: None
+
+  side_by_side_headings:
+    level: 3
+    font_size: 14
+    bold: true
+    underline: true
+    options: None
+  
+  paragraph:
+    level: 4
+    font_size: 12
+    bold: false
+    underline: false
+    options: None
