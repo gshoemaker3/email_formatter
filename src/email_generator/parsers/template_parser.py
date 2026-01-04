@@ -104,6 +104,8 @@ class YamlParser(Parser):
         self.content = None
         self.logger = logging.getLogger("YamlParser")
 
+        self._load_files()
+
     def _load_file(self, filepath: str) -> Dict:
         """ loads a yaml file.
 
@@ -119,7 +121,7 @@ class YamlParser(Parser):
         with open(filepath, 'r', encoding='utf-8') as file:
             return yaml.safe_load(file)
 
-    def load_files(self):
+    def _load_files(self):
         """ This loads all yaml files and stores them in 
             member variables.
         """
@@ -133,9 +135,6 @@ class YamlParser(Parser):
                 self.font = content["font"]
             elif file.name == "content.yaml":
                 self.content = content
-            elif file.name == "section_defs.yaml":
-                self.section_defs = content["sections"]
-                self.subject = content["subject"]
             elif file.name == "recipients.yaml":
                 self.recipients = content
             else:

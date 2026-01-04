@@ -18,7 +18,7 @@ type:
     underline: false
     options: None
   
-  subheading:
+  sub_heading:
     level: 3
     font_size: 14
     bold: true
