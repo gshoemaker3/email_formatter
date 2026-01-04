@@ -1,4 +1,4 @@
 __pycache__
 .DS_Store
-html_files
 .goff
+html_files/*
