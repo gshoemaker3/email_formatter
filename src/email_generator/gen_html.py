@@ -3,7 +3,7 @@ import logging
 from email.message import EmailMessage
 
 from parsers import YamlParser
-from html_utils import Html
+from email_gen import Html
 
 
 class YamlGen:
