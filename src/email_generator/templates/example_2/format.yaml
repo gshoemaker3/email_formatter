@@ -3,38 +3,38 @@ font:
   family: "Aptos"
   size: 14
 
-type:
+blocks:
   email_title:
     level: 1
     font_size: 20
     bold: true
     underline: true
-    options: None
+    options: null
 
   heading:
     level: 2
     font_size: 16
     bold: true
     underline: false
-    options: None
+    options: null
   
   sub_heading:
     level: 3
     font_size: 14
     bold: true
-    underline: false
-    options: None
+    underline: true
+    options: null
 
   side_by_side_headings:
     level: 3
     font_size: 14
     bold: true
     underline: true
-    options: None
+    options: null
   
   paragraph:
     level: 4
     font_size: 12
     bold: false
     underline: false
-    options: None
+    options: null

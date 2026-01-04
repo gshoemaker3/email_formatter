@@ -97,11 +97,12 @@ class YamlParser(Parser):
     def __init__(self, config_dir=None):
         self.config_dir = config_dir if config_dir else self.select_template()
         self.font = None
-        self.type_format = None
-        self.recipients = None
-        self.section_defs = None
+        self.block_format: dict = None
+        self.recipients: dict = None
+        self.section_defs: dict = None
         self.subject = None
-        self.content = None
+        self.content: dict = None
+        self.structure: dict = None
         self.logger = logging.getLogger("YamlParser")
 
         self._load_files()
@@ -130,12 +131,15 @@ class YamlParser(Parser):
         for file in yaml_files:
             content = self._load_file(file)
 
-            if file.name == "section_format.yaml":
-                self.type_format = content["type"]
+            if file.name == "format.yaml":
+                self.block_format = content["blocks"]
                 self.font = content["font"]
             elif file.name == "content.yaml":
                 self.content = content
             elif file.name == "recipients.yaml":
                 self.recipients = content
+                self.subject = content["subject"]
+            elif file.name == "structure.yaml":
+                self.structure = content
             else:
                 raise ValueError(f"Unknown yaml file found: {file}")

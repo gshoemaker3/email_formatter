@@ -3,7 +3,7 @@ lab:
   title: "Lab"
   sub_bullets: false
   section_break: true
-  content_structure: ul
+  content_structure: null
   content:
     - txt: Cool Lab
 
@@ -12,7 +12,7 @@ slot:
   title: "Slot"
   sub_bullets: false
   section_break: true
-  content_structure: ul
+  content_structure: null
   content:
     - txt: Slot111
 
@@ -21,7 +21,7 @@ mc_build:
   title: "MC Build"
   sub_bullets: false
   section_break: true
-  content_structure: ul
+  content_structure: null
   content:
     - txt: BLD1.1.2
 
@@ -30,7 +30,7 @@ gs_build:
   title: "GS Build"
   sub_bullets: false
   section_break: true
-  content_structure: ul
+  content_structure: null
   content:
     - txt: BLD1.1.3
 

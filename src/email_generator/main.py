@@ -21,11 +21,10 @@ def test_2():
 
     config_data: parsers.YamlParser = parsers.YamlParser(template)
     content = email_gen.ContentGen(config_data)
+    html_cont = content.structure_blocks()
 
-    for key, value in content.blocks.items():
-        print(f"section: {key}")
-        with open("email_body_2.html", "a", encoding="utf-8") as f:
-            f.write(value.html_content)
+    with open("email_body_2.html", "w", encoding="utf-8") as f:
+        f.write(html_cont)
 
 def main():
 

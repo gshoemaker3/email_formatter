@@ -1,7 +1,15 @@
 import email_gen
 from email_gen import Html
 
-class Blocks:
+class Block:
+    """ The Blocks class is used to take each section defined in the content.yaml
+        and parse their values into member variables and to convert its data defined
+        in the content section to html. These are called blocks because after all the
+        blocks have been created, then can be used to build an emails by leveraging the
+        structure.yaml. The structure.yaml takes these building "blocks" and organzies
+        them to normal sections, tables, etc. The blocks can be picked up and placed 
+        down in their desired spots. They can also be reused.
+    """
     def __init__(self, section: dict, format: dict):
         self.type: str = section['type']
         self.title: str = section['title']
@@ -12,9 +20,6 @@ class Blocks:
         self.format: dict = format[section['type']]
         self.html_generator: Html = email_gen.Html()
         self.html_content: str = self._convert_data()
-
-    def get_format(self, data: dict):
-        self.format = data
 
     def _convert_data(self) -> str:
         """ This will take in the member variables of the block and 
@@ -30,14 +35,17 @@ class Blocks:
         ret_val += self.html_generator.heading(self.format, self.title)
 
         #Create Open tag for content structure.
-        ret_val += self.html_generator.open_tag(self.content_structure)
+        if self.content_structure is not None:
+            ret_val += self.html_generator.open_tag(self.content_structure)
 
         # Process content
         for item in self.content:
+            # print(f"item being processed: {item}")
             ret_val += self.process_content(item)
 
         # Create close tag for content structure
-        ret_val += self.html_generator.close_tag(self.content_structure)
+        if self.content_structure is not None:
+            ret_val += self.html_generator.close_tag(self.content_structure)
 
         # Store converted data in member var.
         return ret_val
@@ -51,24 +59,38 @@ class Blocks:
             Return:
                 - This eventually returns a string 
         """
-
         if isinstance(data, dict):
             # process dictionary
-            for key, value in data.items():
-                if isinstance(value, str):
-                    # base case
-                    return self.html_generator.get_item(key, value)
-                elif isinstance(value, list):
-                    if key in ["bullets", "numbers"] :
-                        return (self.html_generator.open_tag(key)
-                                + self.process_content(value)
-                                + self.html_generator.close_tag(key))
-                    else:
-                        return self.process_content(value)
-                elif isinstance(value, dict):
-                    return self.process_content(value)
-                else:
-                    raise TypeError(f"unhandled type ({type(value)}) found.")
+            return self._process_dictionary(data)
         elif isinstance(data, list):
             # Process list
-            return self.process_content(data[0])
+            return self._process_list(data)
+    
+    def _process_dictionary(self, data: dict) -> str:
+        ret_val = ""
+        for key, value in data.items():
+            if isinstance(value, str):
+                # base case
+                item = self.html_generator.get_item(key, value)
+                ret_val += item
+            elif isinstance(value, list):
+                if key in ["bullets", "numbers"] :
+                    ret_val += (self.html_generator.open_tag(key)
+                                + self.process_content(value)
+                                + self.html_generator.close_tag(key))
+                else:
+                    ret_val += self.process_content(value)
+            elif isinstance(value, dict):
+                ret_val += self.process_content(value)
+            else:
+                raise TypeError(f"unhandled type ({type(value)}) found.")
+        
+        return ret_val
+
+    def _process_list(self, data: list) -> str:
+        ret_val = ""
+        # Process list
+        for item in data:
+            ret_val += self.process_content(item)
+        
+        return ret_val

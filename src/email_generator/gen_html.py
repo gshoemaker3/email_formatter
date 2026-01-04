@@ -85,7 +85,7 @@ class YamlGen:
         formatting = self.data.type_format[s_type]
         options = formatting['options']
         title = value['title']
-        ret_val = self.generator.html_heading(formatting, title)
+        ret_val = self.generator.heading(formatting, title)
         ret_val += self.proc_section(self.data.content[key], value, options)
 
         return ret_val
@@ -136,16 +136,16 @@ class YamlGen:
         """
         tbl_opts = ['width="100%"', 'cellpadding="5"', 'cellspacing="0"', 'border="0"']
         ri_opts = ['valign="top"']
-        ret_val = self.generator.html_open_tag("table", tbl_opts)
-        ret_val += self.generator.html_open_tag("row")
+        ret_val = self.generator.open_tag("table", tbl_opts)
+        ret_val += self.generator.open_tag("row")
 
         for key, value in self.data.section_defs[s_key]['headings'].items():
-            ret_val += self.generator.html_open_tag("ri", ri_opts)
+            ret_val += self.generator.open_tag("ri", ri_opts)
             ret_val += self._gen_section(value, s_type, key)
-            ret_val += self.generator.html_close_tag("ri")
+            ret_val += self.generator.close_tag("ri")
 
-        ret_val += self.generator.html_close_tag("row")
-        ret_val += self.generator.html_close_tag("table")
+        ret_val += self.generator.close_tag("row")
+        ret_val += self.generator.close_tag("table")
 
         return ret_val
 
