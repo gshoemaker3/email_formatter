@@ -22,7 +22,7 @@ blocks:
     level: 3
     font_size: 14
     bold: true
-    underline: false
+    underline: true
     options: null
 
   side_by_side_headings:

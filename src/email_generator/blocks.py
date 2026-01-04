@@ -1,7 +1,7 @@
 import email_gen
 from email_gen import Html
 
-class Blocks:
+class Block:
     """ The Blocks class is used to take each section defined in the content.yaml
         and parse their values into member variables and to convert its data defined
         in the content section to html. These are called blocks because after all the
@@ -17,7 +17,7 @@ class Blocks:
         self.section_break: bool = section['section_break']
         self.content_structure: str = section['content_structure']
         self.content: list = section['content']
-        self.format: dict = format[section['blocks']]
+        self.format: dict = format[section['type']]
         self.html_generator: Html = email_gen.Html()
         self.html_content: str = self._convert_data()
 
@@ -35,14 +35,17 @@ class Blocks:
         ret_val += self.html_generator.heading(self.format, self.title)
 
         #Create Open tag for content structure.
-        ret_val += self.html_generator.open_tag(self.content_structure)
+        if self.content_structure is not None:
+            ret_val += self.html_generator.open_tag(self.content_structure)
 
         # Process content
         for item in self.content:
+            # print(f"item being processed: {item}")
             ret_val += self.process_content(item)
 
         # Create close tag for content structure
-        ret_val += self.html_generator.close_tag(self.content_structure)
+        if self.content_structure is not None:
+            ret_val += self.html_generator.close_tag(self.content_structure)
 
         # Store converted data in member var.
         return ret_val
@@ -56,24 +59,28 @@ class Blocks:
             Return:
                 - This eventually returns a string 
         """
-
+        ret_val = ""
         if isinstance(data, dict):
             # process dictionary
             for key, value in data.items():
                 if isinstance(value, str):
                     # base case
-                    return self.html_generator.get_item(key, value)
+                    item = self.html_generator.get_item(key, value)
+                    ret_val += item
                 elif isinstance(value, list):
                     if key in ["bullets", "numbers"] :
-                        return (self.html_generator.open_tag(key)
-                                + self.process_content(value)
-                                + self.html_generator.close_tag(key))
+                        ret_val += (self.html_generator.open_tag(key)
+                                    + self.process_content(value)
+                                    + self.html_generator.close_tag(key))
                     else:
-                        return self.process_content(value)
+                        ret_val += self.process_content(value)
                 elif isinstance(value, dict):
-                    return self.process_content(value)
+                    ret_val += self.process_content(value)
                 else:
                     raise TypeError(f"unhandled type ({type(value)}) found.")
         elif isinstance(data, list):
             # Process list
-            return self.process_content(data[0])
+            for item in data:
+                ret_val += self.process_content(item)
+        
+        return ret_val
