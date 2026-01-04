@@ -1,6 +1,10 @@
+subject:
+  - "End of Day Report"
+
 to:
   - jane.doe@gmail.com
   - john.smith@gmail.com
+  - jonah.miller@outlook.com
 
 cc:
   - manager@gmail.com

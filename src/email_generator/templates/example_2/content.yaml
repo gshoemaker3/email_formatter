@@ -1,25 +1,124 @@
-monday:
-  row_1:
-    - li: "Test 1"
-    - li: "Test 2"
-    - li: "Test 3"
-tuesday:
-  row_1:
-    - li: "Test 4"
-    - li: "Test 5"
-    - li: "Test 6"
-wednesday:
-  row_1:
-    - li: "Test 7"
-    - li: "Test 8"
-    - li: "Test 9"
-thursday:
-  row_1:
-    - li: "Test 10"
-    - li: "Test 11"
-    - li: "Test 12"
-friday:
-  row_1:
-    - li: "Test 13"
-    - li: "Test 14"
-    - li: "Test 15"
+lab:
+  type: sub_heading
+  title: "Lab"
+  sub_bullets: false
+  section_break: true
+  content_structure: null
+  content:
+    - txt: Cool Lab
+
+slot:
+  type: sub_heading
+  title: "Slot"
+  sub_bullets: false
+  section_break: true
+  content_structure: null
+  content:
+    - txt: Slot111
+
+mc_build:
+  type: sub_heading
+  title: "MC Build"
+  sub_bullets: false
+  section_break: true
+  content_structure: null
+  content:
+    - txt: BLD1.1.2
+
+gs_build:
+  type: sub_heading
+  title: "GS Build"
+  sub_bullets: false
+  section_break: true
+  content_structure: null
+  content:
+    - txt: BLD1.1.3
+
+staff:
+  type: sub_heading
+  title: "Staff In Attendance"
+  sub_bullets: false
+  section_break: false
+  content_structure: ul
+  content:
+    - li: Alice
+    - li: Bob
+    - li: Charlie
+
+# section breaks should be in the new yaml file that will organize the sections.
+email_title:
+  type: email_title
+  title: "KF MAINTEANCE NOMINAL OPS DDT"
+  sub_bullets: false
+  section_break: false
+  content_structure: null
+  content:
+    - txt: "A small note that goes under the email title"
+    - txt: " "
+
+todays_objectives:
+  type: heading
+  title: "Today's Objectives:"
+  sub_bullets: false
+  section_break: false
+  content_structure: ul
+  content:
+    - li: This is where objective 1 will be.
+    - li: This is where objective 2 will live. 
+    - li: And just because I am feeling froggy, this is where objective 3 will live.
+
+tl_dr:
+  type: heading
+  title: "TL;DR:"
+  sub_bullets: false
+  section_break: false
+  content_structure: ul
+  content:
+    - li: Things were blowing up. 
+    - li: I wrote a bunch of DRs and I am depressed about it.
+    - li: I haven't had enough sleep and I won't get enough tonight.
+
+# The detailed_summary section supports bullets within text blocks
+# Because of this, each text block is an object with a "text" field
+detailed_summary:
+  type: heading
+  title: "Detailed Summary:"
+  sub_bullets: true
+  section_break: false
+  content_structure: ul
+  content:
+    - li: VERY detailed.
+      bullets:
+        - li: SUB BULLETS LETS GO. I hope this works.
+        - li: bullet two
+        - li: bullet three
+    - li: WOW this is SO detailed.
+      bullets:
+        - li: Sub bullet 1
+        - li: sub bullet 2
+          numbers:
+            - li: hello one
+            - li: hello two
+    - li: Like fr give me a metal or something.
+
+tomorrows_objectives:
+  type: heading
+  title: "Tomorrow's Objectives:"
+  sub_bullets: false
+  section_break: true
+  content_structure: ul
+  content:
+    - li: obj 1
+    - li: obj 2
+    - li: obj 3
+
+drs_generated:
+  type: heading
+  title: "DRs Generated:"
+  sub_bullets: false
+  section_break: false
+  content_structure: ul
+  content:
+    - li: dr 1
+    - li: dr 2
+    - li: dr 3
