@@ -3,7 +3,7 @@ font:
   family: "Aptos"
   size: 14
 
-type:
+blocks:
   email_title:
     level: 1
     font_size: 20

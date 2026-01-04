@@ -130,8 +130,8 @@ class YamlParser(Parser):
         for file in yaml_files:
             content = self._load_file(file)
 
-            if file.name == "section_format.yaml":
-                self.type_format = content["type"]
+            if file.name == "format.yaml":
+                self.block_format = content["blocks"]
                 self.font = content["font"]
             elif file.name == "content.yaml":
                 self.content = content
