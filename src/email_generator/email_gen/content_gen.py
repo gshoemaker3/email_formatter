@@ -1,4 +1,5 @@
 import logging
+from email.message import EmailMessage
 
 import email_gen
 from parsers import YamlParser
@@ -61,3 +62,14 @@ class ContentGen:
         ret_val += f"{indent}</div>\n"
 
         return ret_val
+
+    def gen_email(self) -> EmailMessage:
+        """ This method generates an email"""
+        email_body = self.structure_blocks()
+
+        msg = EmailMessage()
+        msg['Subject'] = self.all_data.subject
+        msg['To'] = ", ".join(self.all_data.recipients['to'])
+        msg.set_content(email_body, subtype="html")
+
+        return msg

@@ -51,7 +51,7 @@ email_title:
   title: "KF MAINTEANCE NOMINAL OPS DDT"
   sub_bullets: false
   section_break: false
-  content_structure: ul
+  content_structure: null
   content:
     - txt: "A small note that goes under the email title"
     - txt: " "
