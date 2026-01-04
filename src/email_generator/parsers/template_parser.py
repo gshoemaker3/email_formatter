@@ -138,7 +138,7 @@ class YamlParser(Parser):
                 self.content = content
             elif file.name == "recipients.yaml":
                 self.recipients = content
-                self.subject = content["subject"]
+                self.subject = content["subject"][0]
             elif file.name == "structure.yaml":
                 self.structure = content
             else:
