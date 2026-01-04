@@ -1,0 +1,51 @@
+first:
+  num_sections: 1
+  section_org: single
+  blocks:
+    - email_title
+  section_break: False
+
+second:
+  num_sections: 4
+  section_break: True
+  section_org: side-by-side
+  blocks:
+    - mc_build
+    - gs_build
+    - lab
+    - staff
+
+third:
+  num_sections: 1
+  section_break: False
+  section_org: single
+  blocks:
+    - todays_objectives
+
+fourth:
+  num_sections: 1
+  section_break: False
+  section_org: single
+  blocks:
+    - tl_dr
+
+fifth:
+  num_sections: 1
+  section_break: False
+  section_org: single
+  blocks:
+    - detailed_summary
+
+sixth:
+  num_sections: 1
+  section_break: True
+  section_org: single
+  blocks:
+    - tomorrows_objectives
+
+seventh:
+  num_sections: 1
+  section_break: False
+  section_org: single
+  blocks:
+    - drs_generated
