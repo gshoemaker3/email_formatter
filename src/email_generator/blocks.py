@@ -59,28 +59,38 @@ class Block:
             Return:
                 - This eventually returns a string 
         """
-        ret_val = ""
         if isinstance(data, dict):
             # process dictionary
-            for key, value in data.items():
-                if isinstance(value, str):
-                    # base case
-                    item = self.html_generator.get_item(key, value)
-                    ret_val += item
-                elif isinstance(value, list):
-                    if key in ["bullets", "numbers"] :
-                        ret_val += (self.html_generator.open_tag(key)
-                                    + self.process_content(value)
-                                    + self.html_generator.close_tag(key))
-                    else:
-                        ret_val += self.process_content(value)
-                elif isinstance(value, dict):
-                    ret_val += self.process_content(value)
-                else:
-                    raise TypeError(f"unhandled type ({type(value)}) found.")
+            return self._process_dictionary(data)
         elif isinstance(data, list):
             # Process list
-            for item in data:
-                ret_val += self.process_content(item)
+            return self._process_list(data)
+    
+    def _process_dictionary(self, data: dict) -> str:
+        ret_val = ""
+        for key, value in data.items():
+            if isinstance(value, str):
+                # base case
+                item = self.html_generator.get_item(key, value)
+                ret_val += item
+            elif isinstance(value, list):
+                if key in ["bullets", "numbers"] :
+                    ret_val += (self.html_generator.open_tag(key)
+                                + self.process_content(value)
+                                + self.html_generator.close_tag(key))
+                else:
+                    ret_val += self.process_content(value)
+            elif isinstance(value, dict):
+                ret_val += self.process_content(value)
+            else:
+                raise TypeError(f"unhandled type ({type(value)}) found.")
+        
+        return ret_val
+
+    def _process_list(self, data: list) -> str:
+        ret_val = ""
+        # Process list
+        for item in data:
+            ret_val += self.process_content(item)
         
         return ret_val
