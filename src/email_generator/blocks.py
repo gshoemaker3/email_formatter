@@ -2,6 +2,14 @@ import email_gen
 from email_gen import Html
 
 class Blocks:
+    """ The Blocks class is used to take each section defined in the content.yaml
+        and parse their values into member variables and to convert its data defined
+        in the content section to html. These are called blocks because after all the
+        blocks have been created, then can be used to build an emails by leveraging the
+        structure.yaml. The structure.yaml takes these building "blocks" and organzies
+        them to normal sections, tables, etc. The blocks can be picked up and placed 
+        down in their desired spots. They can also be reused.
+    """
     def __init__(self, section: dict, format: dict):
         self.type: str = section['type']
         self.title: str = section['title']
@@ -9,12 +17,9 @@ class Blocks:
         self.section_break: bool = section['section_break']
         self.content_structure: str = section['content_structure']
         self.content: list = section['content']
-        self.format: dict = format[section['type']]
+        self.format: dict = format[section['blocks']]
         self.html_generator: Html = email_gen.Html()
         self.html_content: str = self._convert_data()
-
-    def get_format(self, data: dict):
-        self.format = data
 
     def _convert_data(self) -> str:
         """ This will take in the member variables of the block and 
