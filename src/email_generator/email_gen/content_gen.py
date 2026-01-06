@@ -26,7 +26,7 @@ class ContentGen:
 
         return blocks
     
-    def structure_blocks(self):
+    def structure_blocks(self) -> str:
         """ This takes the html content in each block stored
             in self.blocks and organizes all of it into a single
             html page. This will utilize the structure.yaml to 
