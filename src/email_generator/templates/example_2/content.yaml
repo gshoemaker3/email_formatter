@@ -39,7 +39,7 @@ staff:
   title: "Staff In Attendance"
   sub_bullets: false
   section_break: false
-  content_structure: ul
+  content_structure: null
   content:
     - li: Alice
     - li: Bob

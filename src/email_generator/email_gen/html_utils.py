@@ -139,3 +139,39 @@ class Html:
 
     def html_decr_indent(self):
         self.tab_size -= 4
+
+    def table(self, rows: int, cols: int, data: list):
+        """ this is used to create a html table based off of input arguments.
+            If there are more elements requested to be in the table than provided
+            elements in the data argument, an empty table element is added.
+
+            Args:
+                - rows: the number of rows the table will have
+                - cols: the number of columns the table will have
+                - data: each element contains html code that the
+                        user wants to insert into the table. If
+                        there are more table entries than elements
+                        in the list, blanks values will be added to
+                        the table. NOTE: This data comes in as a 1D array
+                        that is then converted to a 2D table based 
+                        on the number of rows and columns.
+            return:
+                - html code representing the table.
+        """
+        ret_val = self.open_tag("table")
+
+        # Row loop
+        for row in range(rows):
+            # start row
+            ret_val += self.open_tag("row")
+            # column loop
+            for col in range(cols):
+                idx = cols * row + col
+                # create empty column if no more data is left
+                row_item = data[idx] if idx < len(data) else ""
+                ret_val += self.get_item('ri', row_item)
+            # End row
+            ret_val += self.close_tag("row")
+        ret_val += self.close_tag("table")
+
+        return ret_val

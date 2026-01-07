@@ -32,8 +32,8 @@ class ContentGen:
             html page. This will utilize the structure.yaml to 
             organize the blocks.
         """
-        indent = self.html_gen.html_indent()
-        ret_val = (f"""{indent}<div style="font-family: 'Aptos', Aptos_EmbeddedFont, """
+        indent: str = self.html_gen.html_indent()
+        ret_val: str = (f"""{indent}<div style="font-family: 'Aptos', Aptos_EmbeddedFont, """
                   """Aptos_MSFontService, Calibri, Helvetica, sans-serif;">\n""")
         self.html_gen.html_incr_indent()
 
@@ -41,18 +41,13 @@ class ContentGen:
         for _, value in self.all_data.structure.items():
             if value["section_org"] == "single":
                 # retrieve single heading
-                blk_name = value["blocks"][0]
+                blk_name: str = value["blocks"][0]
                 ret_val += self.blocks[blk_name].html_content
             elif value["section_org"] == "side-by-side":
-                # create 1 row table
-                ret_val += self.html_gen.open_tag("table")
-                ret_val += self.html_gen.open_tag("row")
-
-                for blk_name in value["blocks"]:
-                    html = self.blocks[blk_name].html_content
-                    ret_val += self.html_gen.get_item("ri", html)
-                ret_val += self.html_gen.close_tag("row")
-                ret_val += self.html_gen.close_tag("table")
+                # # create 1 row table
+                cols: int = len(value["blocks"])
+                table_items: list = [self.blocks[block].html_content for block in value["blocks"]]
+                ret_val += self.html_gen.table(1, cols, table_items)
 
             if value["section_break"]:
                 ret_val += self.html_gen.html_hr()
