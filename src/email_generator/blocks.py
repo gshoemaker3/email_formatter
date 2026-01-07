@@ -84,7 +84,6 @@ class Block:
                 ret_val += self.process_content(value)
             else:
                 raise TypeError(f"unhandled type ({type(value)}) found.")
-        
         return ret_val
 
     def _process_list(self, data: list) -> str:
@@ -92,5 +91,4 @@ class Block:
         # Process list
         for item in data:
             ret_val += self.process_content(item)
-        
         return ret_val

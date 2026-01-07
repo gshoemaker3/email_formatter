@@ -5,7 +5,6 @@ from argparse import Namespace
 from email.message import EmailMessage
 
 import parsers
-from gen_html import YamlGen
 from email_gen import mail_clients
 import email_gen
 
@@ -22,7 +21,8 @@ def main():
         content = email_gen.ContentGen(config_data)
         msg: EmailMessage = content.gen_email()
 
-        with open("email_body_3.html", "w", encoding="utf-8") as f:
+        html_file = os.path.join('html_files', 'email_body_3.html')
+        with open(html_file, "w", encoding="utf-8") as f:
             f.write(msg.get_content())
         
         if sys.platform == "win32" and client == "outlook":
