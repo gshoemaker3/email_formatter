@@ -1,4 +1,6 @@
 from typing import List
+from datetime import date
+
 import yaml
 import os
 
@@ -7,6 +9,7 @@ class Html:
     def __init__(self):
         self.tab_size = 0
         self.parsed_yaml = self._load_file(os.path.join('email_gen', 'html_mappings.yaml'))
+        self.date = date.today().strftime("%m-%d-%Y")
         self.open_tags = self.parsed_yaml["open_tags"]
         self.close_tags = self.parsed_yaml["close_tags"]
         self.default_styling = self.parsed_yaml["default_styling"]
@@ -153,3 +156,4 @@ class Html:
 
         with open(filepath, 'r', encoding='utf-8') as file:
             return yaml.safe_load(file)
+

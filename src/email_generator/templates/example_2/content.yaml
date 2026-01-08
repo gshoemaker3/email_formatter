@@ -1,6 +1,7 @@
 lab:
   type: sub_heading
   title: "Lab"
+  date: false
   sub_bullets: false
   section_break: true
   content_structure: null
@@ -10,6 +11,7 @@ lab:
 slot:
   type: sub_heading
   title: "Slot"
+  date: false
   sub_bullets: false
   section_break: true
   content_structure: null
@@ -19,6 +21,7 @@ slot:
 mc_build:
   type: sub_heading
   title: "MC Build"
+  date: false
   sub_bullets: false
   section_break: true
   content_structure: null
@@ -28,6 +31,7 @@ mc_build:
 gs_build:
   type: sub_heading
   title: "GS Build"
+  date: false
   sub_bullets: false
   section_break: true
   content_structure: null
@@ -37,6 +41,7 @@ gs_build:
 staff:
   type: sub_heading
   title: "Staff In Attendance"
+  date: false
   sub_bullets: false
   section_break: false
   content_structure: null
@@ -49,6 +54,7 @@ staff:
 email_title:
   type: email_title
   title: "KF MAINTEANCE NOMINAL OPS DDT"
+  date: false
   sub_bullets: false
   section_break: false
   content_structure: null
@@ -59,6 +65,7 @@ email_title:
 todays_objectives:
   type: heading
   title: "Today's Objectives:"
+  date: false
   sub_bullets: false
   section_break: false
   content_structure: ul
@@ -70,6 +77,7 @@ todays_objectives:
 tl_dr:
   type: heading
   title: "TL;DR:"
+  date: false
   sub_bullets: false
   section_break: false
   content_structure: ul
@@ -83,6 +91,7 @@ tl_dr:
 detailed_summary:
   type: heading
   title: "Detailed Summary:"
+  date: false
   sub_bullets: true
   section_break: false
   content_structure: ul
@@ -104,6 +113,7 @@ detailed_summary:
 tomorrows_objectives:
   type: heading
   title: "Tomorrow's Objectives:"
+  date: false
   sub_bullets: false
   section_break: true
   content_structure: ul
@@ -115,6 +125,7 @@ tomorrows_objectives:
 drs_generated:
   type: heading
   title: "DRs Generated:"
+  date: false
   sub_bullets: false
   section_break: false
   content_structure: ul
