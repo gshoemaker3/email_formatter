@@ -1,56 +1,20 @@
 from typing import List
+import yaml
+import os
 
 
 class Html:
     def __init__(self):
         self.tab_size = 0
-        self.h_opts = 'style="margin-bottom: 2px;"'
-        self.open_tags = {"bullets": "<ul {}>\n",
-                          "ul": "<ul {}>\n",
-                          "numbers": "<ol {}>\n",
-                          "ol": "<ol {}>\n",
-                          "li": "<li {}>",
-                          "table": "<table {}>\n",
-                          "txt": "<p {}>",
-                          "heading": "<h {}>",
-                          "bold": "<b>",
-                          "row": "<tr {}>\n",
-                          "ri": "<td {}>\n",
-                          "underline": "<u>",
-                          "th": "<th {}>"
-                          }
-        self.close_tags = {"bullets": "</ul>\n",
-                           "ul": "</ul>\n",
-                          "numbers": "</ol>\n",
-                          "ol": "</ol>\n",
-                          "li": "</li>\n",
-                          "table": "</table>\n",
-                          "txt": "</p>\n",
-                          "heading": "</h>\n",
-                          "bold": "</b>",
-                          "row": "</tr>\n",
-                          "ri": "</td>\n",
-                          "underline": "</u>",
-                          "th": "</th>"
-                          }
-        self.default_opts = {"bullets": 'style="margin: 4px 0;"',
-                             "ul": 'style="margin: 4px 0;"',
-                             "numbers": 'style="margin: 4px 0;"',
-                             "ol": 'style="margin: 4px 0;"',
-                             "li": 'style="margin: 0;"',
-                             "table": 'width="100%" cellpadding="5" cellspacing="0" border="0"',
-                             "txt": 'style="margin: 4px 0;"',
-                             "heading": 'style="margin-bottom: 2px;"',
-                             "bold": "",
-                             "row": "",
-                             "ri": 'valign="top"',
-                             "underline": "",
-                             "th":""
-                            }
+        self.parsed_yaml = self._load_file(os.path.join('email_gen', 'html_mappings.yaml'))
+        self.open_tags = self.parsed_yaml["open_tags"]
+        self.close_tags = self.parsed_yaml["close_tags"]
+        self.default_styling = self.parsed_yaml["default_styling"]
+
 
     def get_item(self, item_type, data, options: list = None):
         indent = self.html_indent()
-        opts = " ".join(options) if options else self.default_opts[item_type]
+        opts = " ".join(options) if options else self.default_styling[item_type]
         o_tag = self.open_tags[item_type].format(opts)
         c_tag = self.close_tags[item_type]
         return indent + o_tag + data + c_tag
@@ -117,7 +81,7 @@ class Html:
         if tag_key.upper() == "NONE":
             return ""
 
-        opts = " ".join(options) if options else self.default_opts[tag_key]
+        opts = " ".join(options) if options else self.default_styling[tag_key]
         tag = self.open_tags[tag_key].format(opts)
         ret_val = ind + tag
         if indent:
@@ -174,3 +138,18 @@ class Html:
         ret_val += self.close_tag("table")
 
         return ret_val
+
+    def _load_file(self, filepath: str) -> dict:
+        """ loads a yaml file.
+
+            Args:
+                - filepath: the filepath to the yaml file that will be parsed.
+            Return:
+                - A dictionary of the parsed yaml file stored in filepath.
+        """
+
+        if not os.path.exists(filepath):
+            raise FileNotFoundError(f"Could not find the following file: {filepath}")
+
+        with open(filepath, 'r', encoding='utf-8') as file:
+            return yaml.safe_load(file)

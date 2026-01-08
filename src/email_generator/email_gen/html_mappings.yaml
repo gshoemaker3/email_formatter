@@ -1,0 +1,44 @@
+open_tags:
+  bullets: "<ul {}>\n"
+  ul: "<ul {}>\n"
+  numbers: "<ol {}>\n"
+  ol: "<ol {}>\n"
+  li: "<li {}>"
+  table: "<table {}>\n"
+  txt: "<p {}>"
+  heading: "<h {}>"
+  bold: "<b>"
+  row: "<tr {}>\n"
+  ri: "<td {}>\n"
+  underline: "<u>"
+  th: "<th {}>"
+
+close_tags:
+  bullets: "</ul>\n"
+  ul: "</ul>\n"
+  numbers: "</ol>\n"
+  ol: "</ol>\n"
+  li: "</li>\n"
+  table: "</table>\n"
+  txt: "</p>\n"
+  heading: "</h>\n"
+  bold: "</b>"
+  row: "</tr>\n"
+  ri: "</td>\n"
+  underline: "</u>"
+  th: "</th>"
+
+default_styling:
+  bullets: 'style="margin: 4px 0;"'
+  ul: 'style="margin: 4px 0;"'
+  numbers: 'style="margin: 4px 0;"'
+  ol: 'style="margin: 4px 0;"'
+  li: 'style="margin: 0;"'
+  table: 'width="100%" cellpadding="5" cellspacing="0" border="0"'
+  txt: 'style="margin: 4px 0;"'
+  heading: 'style="margin-bottom: 2px;"'
+  bold: ""
+  row: ""
+  ri: 'valign="top"'
+  underline: ""
+  th: ""
