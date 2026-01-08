@@ -6,7 +6,8 @@ from email.message import EmailMessage
 
 def outlook(msg: EmailMessage):
     # Save as .eml
-    eml_file = 'report.eml'
+
+    eml_file = os.path.join('files','email_files', 'report.eml')
     with open(eml_file, 'wb') as f:
         f.write(msg.as_bytes())
 

@@ -21,7 +21,7 @@ def main():
         content = email_gen.ContentGen(config_data)
         msg: EmailMessage = content.gen_email()
 
-        html_file = os.path.join('html_files', 'email_body_3.html')
+        html_file = os.path.join('files','html_files', 'email_body_3.html')
         with open(html_file, "w", encoding="utf-8") as f:
             f.write(msg.get_content())
         
