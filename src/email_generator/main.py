@@ -25,11 +25,7 @@ def main():
         with open(html_file, "w", encoding="utf-8") as f:
             f.write(msg.get_content())
         
-        if sys.platform == "win32" and client == "outlook":
-            print("\n------------------------------------------------------------")
-            print("Please ensure that your Outlook app is open before continuing.")
-            input("Once Outlook is open, press any key to continue...")
-            mail_clients.outlook(msg)
+        mail_clients.outlook(msg)
     except Exception as e:
         logger.exception("The following exception was caught: %s", e)
         input("Please press any button to exit tool...")

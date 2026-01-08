@@ -1,12 +1,18 @@
 import os
-
+import sys
+import subprocess
 from email.message import EmailMessage
 
 
 def outlook(msg: EmailMessage):
     # Save as .eml
-    with open('report.eml', 'wb') as f:
+    eml_file = 'report.eml'
+    with open(eml_file, 'wb') as f:
         f.write(msg.as_bytes())
 
-    # Launch in Outlook
-    os.startfile('report.eml')
+    if sys.platform == "win32":
+        os.startfile(eml_file)  # Only available on Windows
+    elif sys.platform == "darwin":
+        subprocess.call(["open", eml_file])  # For macOS
+    else:
+        subprocess.call(["xdg-open", eml_file])  # For Linux

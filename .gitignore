@@ -1,4 +1,4 @@
 __pycache__
 .DS_Store
 .goff
-html_files/*
+src/email_generator/html_files/*
