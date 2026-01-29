@@ -67,6 +67,17 @@ class Block:
             return self._process_list(data)
     
     def _process_dictionary(self, data: dict) -> str:
+        """ This is used to process dictionaries. This is a helper
+            function of process_content() and it's ultimate goal is to
+            traverse the data derived from the yaml files and retrieve
+            the strings/values stored in them.
+        
+            Args:
+                - data: the dictionary to be process.
+            
+            Args:
+                - Returns the data in the dictionary as html code.
+        """
         ret_val = ""
         for key, value in data.items():
             if isinstance(value, str):
@@ -87,6 +98,17 @@ class Block:
         return ret_val
 
     def _process_list(self, data: list) -> str:
+        """ This is used to process lists. This is a helper
+            function of process_content() and it's ultimate goal is to
+            traverse the data derived from the yaml files and retrieve
+            the strings/values stored in them.
+        
+            Args:
+                - data: the list to be processed.
+            
+            Args:
+                - Returns the data in the dictionary as html code.
+        """
         ret_val = ""
         # Process list
         for item in data:
