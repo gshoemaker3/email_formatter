@@ -1,26 +1,38 @@
 from typing import List
+from datetime import date
+
 import yaml
 import os
 
 
 class Html:
     def __init__(self):
-        self.tab_size = 0
-        self.parsed_yaml = self._load_file(os.path.join('email_gen', 'html_mappings.yaml'))
-        self.open_tags = self.parsed_yaml["open_tags"]
-        self.close_tags = self.parsed_yaml["close_tags"]
-        self.default_styling = self.parsed_yaml["default_styling"]
+        self.tab_size: int = 0
+        self.parsed_yaml: dict = self._load_file(os.path.join('email_gen', 'html_mappings.yaml'))
+        self.date: str = date.today().strftime("%m-%d-%Y")
+        self.open_tags: dict = self.parsed_yaml["open_tags"]
+        self.close_tags: dict = self.parsed_yaml["close_tags"]
+        self.default_styling: dict = self.parsed_yaml["default_styling"]
 
 
-    def get_item(self, item_type, data, options: list = None):
-        indent = self.html_indent()
-        opts = " ".join(options) if options else self.default_styling[item_type]
-        o_tag = self.open_tags[item_type].format(opts)
-        c_tag = self.close_tags[item_type]
+    def get_item(self, item_type: str, data: str, stylings: list = None) -> str:
+        """ generates an html item like list item, table description, etc.
+        
+            Args:
+                - item_type: This is a key that is used to retrieve the desired open
+                  and close tags from the self.open_tags and self.close_tags member vars
+                - data: 
+                - stylings: 
+        """
+        indent: str = self.html_indent()
+        opts: str = " ".join(stylings) if stylings else self.default_styling[item_type]
+        o_tag: str = self.open_tags[item_type].format(opts)
+        c_tag: str = self.close_tags[item_type]
         return indent + o_tag + data + c_tag
 
-    def html_indent(self):
-        tabs = " " * self.tab_size
+    def html_indent(self) -> str:
+        """ generates an indent based on the self.tab_size member variable"""
+        tabs: str = " " * self.tab_size
         return tabs
 
     def heading(self, formatting: dict, text: str) -> str:
@@ -28,15 +40,18 @@ class Html:
         
             Args:
                 - text: This is the text that will be converted to html
+                - formatting: This contains formatting settings from format.yaml
+                  The correspond to the current block's type. This type can be found
+                  in the content.yaml block.
     
             Return:
                 - The completed html heading.
         """
-        settings = ['bold', 'underline']
-        lvl = formatting['level']
-        indent = self.html_indent()
-        tag = self.open_tag("heading", False).replace('<h',f'<h{lvl}')
-        ret_val = f"{indent}{tag}"
+        settings: list = ['bold', 'underline']
+        lvl: int = formatting['level']
+        indent: str = self.html_indent()
+        tag: str = self.open_tag("heading", False).replace('<h',f'<h{lvl}')
+        ret_val: str = f"{indent}{tag}"
 
         for option in settings:
             ret_val += self.open_tags[option] if formatting[option] else ""
@@ -48,19 +63,25 @@ class Html:
         ret_val += self.close_tags["heading"].replace('</h',f'</h{lvl}')
         return ret_val
 
-    def html_hr(self):
+    def html_hr(self) -> str:
+        """ This returns the hr html tag along with the current indent size
+
+            Return:
+                - html hr tag along with the current indent
+        """
         indent = self.html_indent()
         return f"{indent}<hr>\n"
 
-    def html_list_item(self, text: str):
+    def html_list_item(self, text: str) -> str:
         """ This creates a html list item
 
             Args:
                 - the text that will be converted to a list item
+            Return:
+                - html list item populated with text along with current indent size
         """
-        indent = self.html_indent()
-        li = f"{indent}<li>{text}</li>\n"
-        return li
+        indent: str = self.html_indent()
+        return f"{indent}<li>{text}</li>\n"
 
     def open_tag(self, tag_key: str, indent: bool = True, options: List[str] = None) -> str:
         """ This creates and HTML open tag for the tag specified in the tag_key
@@ -88,23 +109,33 @@ class Html:
             self.html_incr_indent()
         return ret_val
 
-    def close_tag(self, tag_type: str):
+    def close_tag(self, tag_type: str) -> str:
+        """ This returns a html close tag.
+            
+            Args:
+                - tag_type: this is the key for the self.close_tags member variable
+                            that corresponds to the desired closing tag
+            Returns:
+                - the html closing tag along with the current indent size so the html file is easily readable.
+        """
         if tag_type.upper() == "NONE":
             return ""
 
         self.html_decr_indent()
-        ind = self.html_indent()
-        tag = self.close_tags[tag_type]
+        ind: str = self.html_indent()
+        tag: str = self.close_tags[tag_type]
 
         return ind + tag
 
-    def html_incr_indent(self):
+    def html_incr_indent(self) -> None:
+        """ This increments the tab_size member var by 4"""
         self.tab_size += 4
 
-    def html_decr_indent(self):
+    def html_decr_indent(self) -> None:
+        """ This decrements the tab_size member var by 4"""
         self.tab_size -= 4
 
-    def table(self, rows: int, cols: int, items: list):
+    def table(self, rows: int, cols: int, items: list) -> str:
         """ this is used to create a html table based off of input arguments.
             If there are more elements requested to be in the table than provided
             elements in the data argument, an empty table element is added.
@@ -153,3 +184,4 @@ class Html:
 
         with open(filepath, 'r', encoding='utf-8') as file:
             return yaml.safe_load(file)
+

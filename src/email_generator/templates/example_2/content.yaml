@@ -58,12 +58,12 @@ email_title:
 
 todays_objectives:
   type: heading
-  title: "Today's Objectives:"
+  title: "Today's Objectives <DATE> :"
   sub_bullets: false
   section_break: false
   content_structure: ul
   content:
-    - li: This is where objective 1 will be.
+    - li: This is where objective 1 will be <DATE>.
     - li: This is where objective 2 will live. 
     - li: And just because I am feeling froggy, this is where objective 3 will live.
 

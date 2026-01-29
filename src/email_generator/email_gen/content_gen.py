@@ -1,15 +1,21 @@
 import logging
+from logging import Logger
 from email.message import EmailMessage
 
 import email_gen
+import utils
 from parsers import YamlParser
+from email_gen import Html
 from blocks import Block
 
 class ContentGen:
+    """ 
+        This class is used for the bulk of the email generation. 
+    """
     def __init__(self, data: YamlParser):
         self.all_data: YamlParser = data
-        self.logger = logging.getLogger(__name__)
-        self.html_gen = email_gen.Html()
+        self.logger: Logger = logging.getLogger(__name__)
+        self.html_gen: Html  = email_gen.Html()
         self.blocks: list = self._create_blocks()
 
     def _create_blocks(self) -> dict[str, Block]:
@@ -26,7 +32,7 @@ class ContentGen:
 
         return blocks
     
-    def structure_blocks(self) -> str:
+    def _structure_blocks(self) -> str:
         """ This takes the html content in each block stored
             in self.blocks and organizes all of it into a single
             html page. This will utilize the structure.yaml to 
@@ -59,8 +65,13 @@ class ContentGen:
         return ret_val
 
     def gen_email(self) -> EmailMessage:
-        """ This method generates an email"""
-        email_body = self.structure_blocks()
+        """ This method generates an email
+        
+            Return:
+                - The message that is used to create the html file and the eml file.
+        """
+        email_body = self._structure_blocks()
+        self.all_data.subject = utils.keyword_replace(self.all_data.subject)
 
         msg = EmailMessage()
         msg['Subject'] = self.all_data.subject
