@@ -1,3 +1,4 @@
+import utils
 import email_gen
 from email_gen import Html
 
@@ -32,6 +33,7 @@ class Block:
         """
         ret_val = ""
         # create title
+        self.title = utils.keyword_replace(self.title)
         ret_val += self.html_generator.heading(self.format, self.title)
 
         #Create Open tag for content structure.
@@ -82,6 +84,7 @@ class Block:
         for key, value in data.items():
             if isinstance(value, str):
                 # base case
+                value = utils.keyword_replace(value)
                 item = self.html_generator.get_item(key, value)
                 ret_val += item
             elif isinstance(value, list):

@@ -3,6 +3,7 @@ from logging import Logger
 from email.message import EmailMessage
 
 import email_gen
+import utils
 from parsers import YamlParser
 from email_gen import Html
 from blocks import Block
@@ -31,7 +32,7 @@ class ContentGen:
 
         return blocks
     
-    def structure_blocks(self) -> str:
+    def _structure_blocks(self) -> str:
         """ This takes the html content in each block stored
             in self.blocks and organizes all of it into a single
             html page. This will utilize the structure.yaml to 
@@ -69,7 +70,8 @@ class ContentGen:
             Return:
                 - The message that is used to create the html file and the eml file.
         """
-        email_body = self.structure_blocks()
+        email_body = self._structure_blocks()
+        self.all_data.subject = utils.keyword_replace(self.all_data.subject)
 
         msg = EmailMessage()
         msg['Subject'] = self.all_data.subject
